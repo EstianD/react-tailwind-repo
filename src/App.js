@@ -1,23 +1,57 @@
-import logo from './logo.svg';
-import './App.css';
+import { useReducer } from "react";
+import "./App.css";
+import Header from "./components/Header";
+import ContactForm from "./components/ContactForm";
+
+export const ACTIONS = {
+  GET_CONTACTS: "get_contacts",
+  ADD_CONTACT: "add_contact",
+};
+
+const initialState = [
+  {
+    id: 1,
+    name: "John",
+    Email: "john@gmail.com",
+    number: "021 554 2162",
+  },
+  {
+    id: 2,
+    name: "Jane",
+    Email: "jane@gmail.com",
+    number: "021 113 9605",
+  },
+];
+
+function reducer(state, action) {
+  switch (action.type) {
+    case ACTIONS.GET_CONTACTS:
+      state = action.payload.contacts;
+      return state;
+    case ACTIONS.ADD_CONTACT:
+      console.log("CONTACT: ", action.payload);
+      return [...state, action.payload.contact];
+
+    default:
+      return state;
+  }
+}
 
 function App() {
+  const [contacts, dispatch] = useReducer(reducer, initialState);
+  console.log("CONTACTS: ", contacts);
+
+  const renderContact = () => {
+    return contacts.map((contact) => {
+      return <p>{contact.name}</p>;
+    });
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <ContactForm dispatch={dispatch} />
+      {renderContact()}
     </div>
   );
 }
